@@ -118,7 +118,7 @@ class Model {
 		if (this.changes == "ACAP") possiblevalues = [1.46, 1.19, 1.0, 0.86, 0.71]
 		if (this.changes == "AEXP") possiblevalues = [1.29, 1.15, 1.0, 0.91, 0.82]
 		if (this.changes == "PCAP") possiblevalues = [1.42, 1.17, 1.0, 0.86, 0.7]
-		if (this.changes == "VEXP") possiblevalues = [1.21,, 1.1, 1.0, 0.9, 0.9]
+		if (this.changes == "VEXP") possiblevalues = [1.21, 1.1, 1.0, 0.9, 0.9]
 		if (this.changes == "LEXP") possiblevalues = [1.14, 1.07, 1.0, 0.95, 0.95]
 
 		console.log(possiblevalues)

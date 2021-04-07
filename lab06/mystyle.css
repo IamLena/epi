@@ -33,5 +33,6 @@ select option {
 }
 
 .canvas {
+	margin-top: 15px;
 	display : inline-block;
 }
