@@ -98,9 +98,12 @@ class Model {
 		this.pmarray = []
 		this.tmarray = []
 		this.changes = document.getElementById("change").value
-		console.log(document.getElementById("change"))
-		console.log(this.changes)
-		console.log((this.changes == "ACAP"))
+		if (this.changes == "nothing")
+		{
+			document.getElementById("chart_labels").innerHTML += this.formlabel()
+			this.drawtable()
+			return
+		}
 		var possiblevalues = []
 		if (this.changes == "RELY") possiblevalues = [0.75, 0.86, 1.0, 1.15, 1.4]
 		if (this.changes == "DATA") possiblevalues = [0.94, 0.94, 1.0, 1.08, 1.16]
@@ -121,7 +124,6 @@ class Model {
 		if (this.changes == "VEXP") possiblevalues = [1.21, 1.1, 1.0, 0.9, 0.9]
 		if (this.changes == "LEXP") possiblevalues = [1.14, 1.07, 1.0, 0.95, 0.95]
 
-		console.log(possiblevalues)
 		for (let i = 0; i < 5; i++) {
 			if (this.changes == "RELY") this.RELY = possiblevalues[i]
 			if (this.changes == "DATA") this.DATA = possiblevalues[i]
@@ -147,7 +149,6 @@ class Model {
 		}
 
 		var color = random_rgba();
-		console.log(color);
 		label += 1;
 		var newdataset1 = {
 			label: label,
@@ -168,8 +169,15 @@ class Model {
 		document.getElementById("chart_labels").innerHTML += this.formlabel();
 	}
 	formlabel() {
-		var str = label;
-		str += ": changing " + this.changes;
+		var str = ''
+		if (this.changes == "nothing")
+		{
+			str += "PM: " + this.PM + "; TM: " + this.TM
+		}
+		else {
+			str += label;
+			str += ": changing " + this.changes;
+		}
 		if (this.changes != "RELY" && this.RELY != 1) str += ", RELY = " + this.RELY;
 		if (this.changes != "DATA" && this.DATA != 1) str += ", DATA = " + this.DATA;
 		if (this.changes != "CPLX" && this.CPLX != 1) str += ", CPLX = " + this.CPLX;
@@ -190,11 +198,60 @@ class Model {
 		if (this.changes != "LEXP" && this.LEXP != 1) str += ", LEXP = " + this.LEXP;
 
 		str += ", " + this.SIZE + " KLOC, " + this.formula + " вариант</br>";
-		console.log(str);
 		return str;
+	}
+	drawtable() {
+		var budget = 0
+		var prices = [100000, 192000, (140000 + 150000) / 2, (120000 + 100000) / 2, (120000 + 100000) / 2]
+		var table1 = {
+			title: "Распределение работ и времени по стадиям жизненного цикла",
+			data: [["Вид деятельности", "Трудозатраты (чм)", "Время (м)", "Кол-во сотрудников (Work/Time)"],
+					["Планирование и определение требований", 0.08 * this.PM, 0.36 * this.TM, Math.round(0.08 * this.PM / (0.36 * this.TM))],
+					["Проектирование продукта", 0.18 * this.PM, 0.36 * this.TM, Math.round(0.18 * this.PM / (0.36 * this.TM))],
+					["Детальное проектирование", 0.25 * this.PM, 0.18 * this.TM, Math.round(0.25 * this.PM / (0.18 * this.TM))],
+					["Кодирование и тестирование отдельных модулей", 0.26 * this.PM, 0.18 * this.TM, Math.round(0.26 * this.PM / (0.18 * this.TM))],
+					["Интеграция и тестирование", 0.31 * this.PM, 0.28 * this.TM, Math.round(0.31 * this.PM / (0.28 * this.TM))],
+					["Итого", (0.08 + 0.18 + 0.25 + 0.26 + 0.31) * this.PM, (0.36 + 0.36 + 0.18 + 0.18 + 0.28) * this.TM, ""]]
+					// ["Итого", (0.08 + 0.18 + 0.25 + 0.26 + 0.31) * this.PM, (0.36 + 0.36 + 0.18 + 0.18 + 0.28) * this.TM, Math.round((0.08 + 0.18 + 0.25 + 0.26 + 0.31) * this.PM / ((0.36 + 0.36 + 0.18 + 0.18 + 0.28) * this.TM))]]
+		}
+		tableCreate(table1);
+
+		table1.data.forEach((datarow, index) => {if (index > 0 && index < 6) {budget += (datarow[1] * prices[index - 1])}})
+		var table2 = {
+			title: "Предположительный бюджет",
+			data: [["Анализ требований (4%)", Math.round(0.04 * budget)],
+					["Проектирование продукта (12%)", Math.round(0.12 * budget)],
+					["Программирование (44%)", Math.round(0.44 * budget)],
+					["Тестирование (6%)", Math.round(0.06 * budget)],
+					["Верификация и аттестация (14%)", Math.round(0.14 * budget)],
+					["Канцелярия проекта (7%)",Math.round( 0.7 * budget)],
+					["Управление конфигурацией и обеспечение качества (7%)", Math.round(0.07 * budget)],
+					["Создание руководств (6%)", Math.round(0.06 * budget)],
+					["Непредвиденные риски(+20%)", Math.round(0.20 * budget)],
+					["Итого", Math.round(1.2 * budget)]]
+		}
+		tableCreate(table2);
 	}
 }
 
+function tableCreate(tableobj) {
+	var body = document.body,
+		tbl  = document.createElement('table');
+		tbltitle = document.createElement('h6');
+	tbl.style.border = '1px solid black';
+
+	tbltitle.innerHTML = tableobj.title;
+	for (var i = 0; i < tableobj.data.length; i++) {
+		var tr = tbl.insertRow();
+		for (var j = 0; j < tableobj.data[0].length; j++) {
+			var td = tr.insertCell();
+			td.appendChild(document.createTextNode(tableobj.data[i][j]));
+			td.style.border = '1px solid black';
+		}
+	}
+	body.appendChild(tbltitle);
+	body.appendChild(tbl);
+}
 
 function addData(chart, newdataset) {
     chart.data.datasets.push(newdataset);
@@ -202,20 +259,14 @@ function addData(chart, newdataset) {
 }
 
 function calculate() {
-	console.log("calculating");
 	model = new Model();
 	model.insert_params();
 	model.calculate();
-	console.log(model);
-	console.log(model.PM, model.TM);
-
 	model.drawchart();
 }
 
 function changeColor(elem) {
-	console.log(elem)
 	text = elem.options[elem.selectedIndex].text;
-	console.log(text);
 	if (text == "Очень низкий")
 		elem.style.backgroundColor = "rgb(255, 87, 87)";
 	else if (text == "Низкий")
