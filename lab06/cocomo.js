@@ -100,7 +100,10 @@ class Model {
 		this.changes = document.getElementById("change").value
 		if (this.changes == "nothing")
 		{
-			document.getElementById("chart_labels").innerHTML += this.formlabel()
+			var body = document.body
+			var tbltitle = document.createElement('h5');
+			tbltitle.innerHTML = this.formlabel();
+			body.appendChild(tbltitle);
 			this.drawtable()
 			return
 		}
