@@ -118,6 +118,7 @@ class Model {
 		this.work = 2.45 * this.Cocomo_values.reduce(array_mult) * Math.pow(this.kloc, this.p)
 		this.time = 3.0 * Math.pow(this.work, 0.33 + 0.2 * (this.p - 1.01))
 		this.workers = Math.round(this.work / this.time)
+		this.budget = this.workers * 150000 * this.time
 	}
 }
 
@@ -198,4 +199,5 @@ function setdata() {
 	console.log("work", model.work)
 	console.log("time", model.time)
 	console.log("people", model.workers)
+	console.log("budget", model.budget)
 }
