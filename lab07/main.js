@@ -2,6 +2,9 @@
 const array_sum = (accumulator, currentValue) => accumulator + currentValue
 const array_mult = (accumulator, currentValue) => accumulator * currentValue
 
+const languages = [["SQL", 30], ["JavaScript", 56], ["Java", 54], ["ASM", 320], ["C", 128], ["C++", 53]]
+
+
 class Model {
 	constructor() {
 		this.Fi_labels = ["Обмен данными", "Распределенная обработка", "Производительность", "Эксплуатационные ограничения по аппаратным ресурсам", "Транзакционная нагрузка", "Интенсивность взаимодействия с пользователем (оперативный ввод данных)", "Эргономические характеристики, влияющие на эффективность работы конечных пользователей", "Оперативное обновление", "Сложность обработки", "Повторное использование", "Легкость инсталляции", "Легкость эксплуатации/администрирования", "Портируемость", "Гибкость"]
@@ -105,17 +108,16 @@ class Model {
 
 		// 30% кода будет написано на SQL (13 LOC на один оператор);
 		// 10 % - на JavaScript (56 LOC);
-		// 60% - на Java (54 LOC).
-		this.kloc = (0.3 * 13 + 0.1 * 56 + 0.6 * 54) * this.fp / 1000
+		// 60% - на Java (53 LOC).
+		this.kloc = (0.3 * 13 + 0.1 * 56 + 0.6 * 53) * this.fp / 1000
 
 		return this.kloc
 	}
 	calculate_Cocomo() {
 		this.p = this.p_factors_values.reduce(array_sum) / 100 + 1.01
-		console.log(this.p)
-		console.log(this.Cocomo_values.reduce(array_mult))
 		this.work = 2.45 * this.Cocomo_values.reduce(array_mult) * Math.pow(this.kloc, this.p)
 		this.time = 3.0 * Math.pow(this.work, 0.33 + 0.2 * (this.p - 1.01))
+		this.workers = Math.round(this.work / this.time)
 	}
 }
 
@@ -183,15 +185,17 @@ function setdata() {
 	model.insert_Fi_data()
 	model.insert_Cocomo_data()
 	model.insert_p_data()
-	console.log(model.Fi_values)
-	console.log(model.Cocomo_values)
-	console.log(model.p_factors_values)
+	console.log("Fi_values", model.Fi_values)
+	console.log("Cocomo values", model.Cocomo_values)
+	console.log("values for p", model.p_factors_values)
 
 	model.calcukate_KLOC(79)
 	model.calculate_Cocomo()
 
 	console.log("fp", model.fp)
 	console.log("kloc", model.kloc)
+	console.log("p", model.p)
 	console.log("work", model.work)
 	console.log("time", model.time)
+	console.log("people", model.workers)
 }
