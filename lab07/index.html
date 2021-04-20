@@ -298,7 +298,40 @@
 				<option value="0">Уровень 5 СММ</option>
 			</select>
 		</div>
+
+	</div>
+	<h1>Дополнительные параметры</h1>
+	<div dop>
+		<label for="payment">зарплата разработчика (в рублях)</label>
+		<input id="payment" value="150000">
+		<div id=langs>
+			<div inputdata>
+				<label for="lang0">яп: </label>
+				<select name="lang0" id="lang0">
+					<option selected value="320">assembley</option>
+					<option value="128">c</option>
+					<option value="196">kobol</option>
+					<option value="106">fortran</option>
+					<option value="90">pascal</option>
+					<option value="53">c++</option>
+					<option value="53">java; c#</option>
+					<option value="13">sql</option>
+					<option value="56">js</option>
+					<option value="49">ada 95</option>
+					<option value="24">visual basic</option>
+					<option value="34">visual c++</option>
+					<option value="29">delphi</option>
+					<option value="21">perl</option>
+					<option value="54">prolog</option>
+				</select>
+				<input id="lang0prop" value="100">
+				<label for="lang0prop">%</label>
+			</div>
+		</div>
+		<button onclick="addlang()">добавить яп</button>
+
 	</div>
 	<button onclick="setdata()">calculate</button>
+	<h1>Результаты вычислений</h1>
 </body>
 </html>
